@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kbot-probed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kbot-probed
+  template:
+    metadata:
+      labels:
+        app: kbot-probed
+    spec:
+      containers:
+      - name: kbot
+        image: ghcr.io/vadym-marchenko/telebot.git:v1.0.1-linux-arm64
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
