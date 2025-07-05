@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nfs-backup-cronjob
+spec:
+  # IMPORTANT: Runs every day at 2:00 AM. Customize the schedule as needed.
+  # Format: "Minute Hour Day-of-Month Month Day-of-Week"
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: rsync-nfs
+            # Using a public image that includes the rsync utility
+            image: eeacms/rsync
+            command: ["/bin/sh", "-c"]
+            args: ["rsync -avh --delete /mnt/data/ /mnt/archive/"]
+            volumeMounts:
+            - name: data-volume
+              mountPath: /mnt/data
+            - name: archive-volume
+              mountPath: /mnt/archive
+          volumes:
+          - name: data-volume
+            nfs:
+              server: YOUR_NFS_SERVER_IP_OR_HOSTNAME # <-- Replace this
+              path: /path/to/your/data              # <-- Replace this
+          - name: archive-volume
+            nfs:
+              server: YOUR_NFS_SERVER_IP_OR_HOSTNAME # <-- Replace this
+              path: /path/to/your/archive           # <-- Replace this
+          restartPolicy: OnFailure
