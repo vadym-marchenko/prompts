@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-pipeline-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: data-pipeline-runner
+        # IMPORTANT: Replace this with your custom container image
+        # that includes your Python code and dependencies (e.g., apache-beam[gcp]).
+        image: python:3.9-slim
+        command:
+        - "python"
+        - "-m"
+        - "your_module.your_pipeline_file"
+        args:
+        - "--runner=DirectRunner"
+        # NOTE: Input/output paths are now local to the container.
+        # You will need to make your data available inside the container,
+        # for example, by building it into the image or using a volume.
+        - "--input=/data/input/data.txt"
+        - "--output=/data/output/results"
+      restartPolicy: OnFailure
+  backoffLimit: 4

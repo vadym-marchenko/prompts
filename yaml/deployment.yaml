@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kbot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kbot
+  template:
+    metadata:
+      labels:
+        app: kbot
+    spec:
+      containers:
+      - name: kbot
+        image: ghcr.io/vadym-marchenko/telebot.git:v1.0.1-linux-arm64
+        ports:
+        - containerPort: 80
