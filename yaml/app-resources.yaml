@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kbot-resources
+spec:
+  containers:
+  - name: kbot
+    image: ghcr.io/vadym-marchenko/telebot.git:v1.0.1-linux-arm64
+    resources:
+      requests:
+        memory: "123Mi"
+        cpu: "200m"
+      # It's also a good practice to set resource limits to prevent a container
+      # from consuming too many resources on the node.
+      # limits:
+      #   memory: "256Mi"
+      #   cpu: "500m"
