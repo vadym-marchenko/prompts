@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kbot-volume-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kbot-volume-app
+  template:
+    metadata:
+      labels:
+        app: kbot-volume-app
+    spec:
+      containers:
+      - name: kbot
+        image: ghcr.io/vadym-marchenko/telebot.git:v1.0.1-linux-arm64
+        volumeMounts:
+        - name: data-storage
+          mountPath: /mnt/data
+      volumes:
+      - name: data-storage
+        emptyDir: {}
